@@ -132,16 +132,21 @@ h2 {
   clear: both;
   display: table;
 }
+#headerContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
 
 </style>
 </head>
 <body>
 <div class="container">
-  <h2>Reisschema</h2>
-  
-  <button id="togglePast">Verberg/Toon Verleden</button>
-	<div class="clearfix"></div>
+<div id="headerContainer">
+    <h1 id="title">Reisschema</h1>
+    <button id="togglePast">Verberg/Toon Verleden</button>
+</div>
 
   <button class="collapsible">6 - 8 augustus: Almere naar Strasbourg (525 km, 6 uur)</button>
   <div class="content">
@@ -245,7 +250,7 @@ function diffInDays(date1, date2) {
 
 // Bereken het aantal dagen sinds de startdatum van de reis
 var startDate = new Date("2023-08-06"); // Startdatum van de reis
-var today = new Date(); // Huidige datum
+var today = new Date("2023-08-15"); // Huidige datum
 var diff = diffInDays(startDate, today);
 
 // Bepaal welke sectie moet worden geopend
@@ -290,6 +295,7 @@ document.getElementById("togglePast").addEventListener("click", function() {
     }
   }
 });
+
 </script>
 
 </body>
