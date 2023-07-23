@@ -262,24 +262,6 @@ h2 {
   </div>
   
   
-<!-- <button id="protected-link-button">Open de beveiligde link</button> -->
-
-<!-- <script> -->
-<!-- document.getElementById('protected-link-button').onclick = function() { -->
-    <!-- var code = prompt('Voer de code van 4 cijfers in:'); -->
-    
-    <!-- // Controleer of de code correct is -->
-    <!-- if (code === '1234') { // vervang '1234' door de code die je wilt gebruiken -->
-        <!-- // De code is correct, open de link -->
-        <!-- window.open('https://maps.google.com', '_blank'); // vervang deze URL door de gewenste link -->
-    <!-- } else { -->
-        <!-- // De code is niet correct, geef een foutmelding -->
-        <!-- alert('Onjuiste code, probeer het opnieuw.'); -->
-    <!-- } -->
-<!-- } -->
-<!-- </script> -->
-
-
 </div>
 
 <script>
@@ -303,9 +285,12 @@ for (i = 0; i < coll.length; i++) {
 // Functie om het verschil in dagen te berekenen
 function diffInDays(date1, date2) {
     var dt1 = new Date(date1);
+    dt1.setHours(0, 0, 0, 0);  // Zet de tijd op middernacht
     var dt2 = new Date(date2);
+    dt2.setHours(0, 0, 0, 0);  // Zet de tijd op middernacht
     return Math.floor((dt2.getTime() - dt1.getTime()) / (1000 * 60 * 60 * 24));
 }
+
 
 // Bereken het aantal dagen sinds de startdatum van de reis
 var startDate = new Date("2023-08-06"); // Startdatum van de reis
@@ -315,21 +300,21 @@ var diff = diffInDays(startDate, today);
 // Bepaal welke sectie moet worden geopend
 var sectionToOpen;
 if (diff < 2) {
-    sectionToOpen = 0;
+    sectionToOpen = 0; //Strasbourg
 } else if (diff < 4) {
-    sectionToOpen = 1;
+    sectionToOpen = 1;	//Lugano
 } else if (diff < 7) {
-    sectionToOpen = 2;
+    sectionToOpen = 2; //Florence
 } else if (diff < 10) {
-    sectionToOpen = 3;
-} else if (diff < 13) {
-    sectionToOpen = 4;
+    sectionToOpen = 3; //Val d'Orcia
+} else if (diff < 12) {
+    sectionToOpen = 4; //Portofino
+} else if (diff < 14) {
+    sectionToOpen = 5; //Geneve
 } else if (diff < 16) {
-    sectionToOpen = 5;
+    sectionToOpen = 6; //Parijs
 } else if (diff < 18) {
-    sectionToOpen = 6;
-} else if (diff < 20) {
-    sectionToOpen = 7;
+    sectionToOpen = 7; //Almere
 } else {
     sectionToOpen = 8;
 }
@@ -346,13 +331,36 @@ window.addEventListener("load", function() {
 <script>
 // Voer dit uit wanneer de pagina volledig is geladen
 document.addEventListener('DOMContentLoaded', function() {
-    // Definieer de steden voor elk van je reissegmenten
-    var cities = ["Strasbourg", "Lugano", "Florence", "Montepulciano", "Portofino", "Geneve", "Parijs", "Almere"];
+    // Definieer de steden voor elk van je reissegmenten en hun coördinaten
+    var cities = [
+        { name: "Strasbourg", lat: 48.5734, lon: 7.7521, arrivalDate: "2023-08-06" },
+        { name: "Lugano", lat: 46.0037, lon: 8.9511, arrivalDate: "2023-08-08" },
+        { name: "Florence", lat: 43.7696, lon: 11.2558, arrivalDate: "2023-08-10" },
+        { name: "Montepulciano", lat: 43.0987, lon: 11.7872, arrivalDate: "2023-08-13" },
+        { name: "Portofino", lat: 44.3032, lon: 9.2095, arrivalDate: "2023-08-16" },
+        { name: "Geneve", lat: 46.2044, lon: 6.1432, arrivalDate: "2023-08-18" },
+        { name: "Parijs", lat: 48.8566, lon: 2.3522, arrivalDate: "2023-08-20" },
+        { name: "Almere", lat: 52.3508, lon: 5.2647, arrivalDate: "2023-08-22" }
+        // Vul de rest van de steden en hun coördinaten in...
+    ];
     
     // Loop door de steden en haal het weer op voor elk van hen
     cities.forEach(function(city) {
-        // Bouw de URL voor de API-aanvraag
-        var url = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=0ac01d7cd02d6227709da22ee5743a59&units=metric&lang=nl";
+        var arrivalDate = new Date(city.arrivalDate);
+        var today = new Date();
+
+        // Bepaal of we de huidige weersinformatie of de voorspelling moeten ophalen
+        var url;
+        var forecastDay;
+        if (arrivalDate.getTime() > today.getTime()) {
+            // Haal de voorspelling op als de aankomstdatum in de toekomst ligt
+            url = "https://api.openweathermap.org/data/2.5/onecall?lat=" + city.lat + "&lon=" + city.lon + "&exclude=current,minutely,hourly,alerts&appid=0ac01d7cd02d6227709da22ee5743a59&units=metric&lang=nl";
+            forecastDay = Math.min(diffInDays(today, arrivalDate), 7); // Maximale voorspelling is 7 dagen
+        } else {
+            // Haal de huidige weersinformatie op als de aankomstdatum vandaag of in het verleden ligt
+            url = "https://api.openweathermap.org/data/2.5/weather?q=" + city.name + "&appid=0ac01d7cd02d6227709da22ee5743a59&units=metric&lang=nl";
+            forecastDay = 0;
+        }
         
         // Doe de API-aanvraag
         fetch(url)
@@ -360,40 +368,66 @@ document.addEventListener('DOMContentLoaded', function() {
                 return response.json();
             })
             .then(function(data) {
-                // Bouw een string met de weergegevens
-                var weatherData = "Weer in " + city + ": " + data.weather[0].description + ", temperatuur: " + data.main.temp + "°C";
-                
-                // Voeg de weergegevens toe aan het juiste reissegment
-                document.getElementById(city + "-weather").innerHTML = weatherData;
+                var weatherData;
+                var weatherIconCode;
+                if (forecastDay > 0) {
+                    // Dit is een voorspelling
+                    var forecastDate = new Date(today.getTime());
+                    forecastDate.setDate(forecastDate.getDate() + forecastDay);
+                    // Formateer de datum naar een leesbaar formaat
+                    var formattedDate = forecastDate.toLocaleDateString('nl-NL', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+                    weatherData = "Weersvoorspelling voor " + city.name + " op " + formattedDate + ": " + data.daily[forecastDay].weather[0].description + ", temperatuur: " + data.daily[forecastDay].temp.day + "°C";
+                    weatherIconCode = data.daily[forecastDay].weather[0].icon;
+                } else {
+                    // Dit is de huidige weersinformatie
+                    weatherData = "Weer in " + city.name + " vandaag: " + data.weather[0].description + ", temperatuur: " + data.main.temp + "°C";
+                    weatherIconCode = data.weather[0].icon;
+                }
 
-                // Haal de weericooncode op
-                var weatherIconCode = data.weather[0].icon;
-                
+                // Voeg de weergegevens toe aan het juiste reissegment
+                document.getElementById(city.name + "-weather").innerHTML = weatherData;
+
                 // Bouw de URL voor de weericoon
                 var weatherIconUrl = "https://openweathermap.org/img/w/" + weatherIconCode + ".png";
-                
-				// Voeg de weericoon toe aan het juiste knop-element
-				var img = document.createElement('img');
-				img.src = weatherIconUrl;
-				img.style.marginLeft = '10px';  // Voeg wat ruimte toe aan de linkerkant van de icoon
-				img.style.verticalAlign = 'middle';  // Lijn de afbeelding uit met de tekst
-				document.getElementById(city + "-button").appendChild(img);
-				//
 
+                // Voeg de weericoon toe aan het juiste knop-element
+                var img = document.createElement('img');
+                img.src = weatherIconUrl;
+                img.style.marginLeft = '10px';  // Voeg wat ruimte toe aan de linkerkant van de icoon
+                img.style.verticalAlign = 'middle';  // Lijn de afbeelding uit met de tekst
+                document.getElementById(city.name + "-button").appendChild(img);
 
-				// Maak een nieuw tekstelement voor de temperatuur
-				var temp = document.createElement('span');
-				temp.textContent = " " + Math.round(data.main.temp) + "°C";  // Temperatuur afronden
-				temp.style.marginLeft = '5px';  // Voeg wat ruimte toe aan de linkerkant van de temperatuur
-				document.getElementById(city + "-button").appendChild(temp);
-				//
-
+                // Maak een nieuw tekstelement voor de temperatuur
+                var temp = document.createElement('span');
+                temp.textContent = " " + Math.round(forecastDay > 0 ? data.daily[forecastDay].temp.day : data.main.temp) + "°C";  // Temperatuur afronden
+                temp.style.marginLeft = '5px';  // Voeg wat ruimte toe aan de linkerkant van de temperatuur
+                document.getElementById(city.name + "-button").appendChild(temp);
             });
     });
 });
+
 </script>
+<script>
+// Verberg alle secties die in het verleden liggen
+for (i = 0; i < sectionToOpen; i++) {
+  coll[i].classList.add('past');
+}
 
-
+// Functie om gebeurtenissen uit het verleden te tonen of te verbergen
+var pastVisible = false;
+document.getElementById("togglePast").addEventListener("click", function() {
+  pastVisible = !pastVisible;
+  for (i = 0; i < sectionToOpen; i++) {
+    if (pastVisible) {
+      coll[i].classList.remove('past');
+      coll[i].classList.add('show-past');
+    } else {
+      coll[i].classList.remove('show-past');
+      coll[i].classList.add('past');
+    }
+  }
+});
+</script>
 
 
 </body>
