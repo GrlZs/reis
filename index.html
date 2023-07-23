@@ -351,7 +351,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Loop door de steden en haal het weer op voor elk van hen
     cities.forEach(function(city) {
         // Bouw de URL voor de API-aanvraag
-        var url = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=0ac01d7cd02d6227709da22ee5743a59&units=metric&lang=nl";
+        var url = "https://api.openweathermap.org/data/2.5/weather?q=" + city + "&appid=0ac01d7cd02d6227709da22ee5743a59&units=metric&lang=nl";
         
         // Doe de API-aanvraag
         fetch(url)
@@ -369,7 +369,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 var weatherIconCode = data.weather[0].icon;
                 
                 // Bouw de URL voor de weericoon
-                var weatherIconUrl = "http://openweathermap.org/img/w/" + weatherIconCode + ".png";
+                var weatherIconUrl = "https://openweathermap.org/img/w/" + weatherIconCode + ".png";
                 
 				// Voeg de weericoon toe aan het juiste knop-element
 				var img = document.createElement('img');
