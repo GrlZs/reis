@@ -209,7 +209,7 @@ h2 {
     </ul>
   </div>
 
-  <button class="collapsible" id="Portofino-button">16 - 18 aug: Val d'Orcia naar de IT Rivièra (290 km, 4 uur)</button>
+  <button class="collapsible" id="Portofino-button">16 - 18 aug: Val d'Orcia naar IT Rivièra (290 km, 4 uur)</button>
   <div class="content">
     <p>Verblijf in: <strong>Hotel Villa Alberti - Portofino Land</strong> (CI/CO 14.30h/11h)</p>
 	<div id="Portofino-weather"></div>
@@ -376,11 +376,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     forecastDate.setDate(forecastDate.getDate() + forecastDay);
                     // Formateer de datum naar een leesbaar formaat
                     var formattedDate = forecastDate.toLocaleDateString('nl-NL', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-                    weatherData = "Weersvoorspelling voor " + city.name + " op " + formattedDate + ": " + data.daily[forecastDay].weather[0].description + ", temperatuur: " + data.daily[forecastDay].temp.day + "°C";
+                    weatherData = "Weersvoorspelling voor " + city.name + " op " + formattedDate + ": " + data.daily[forecastDay].weather[0].description + ", temperatuur: " + Math.round(data.daily[forecastDay].temp.day) + "°C";
                     weatherIconCode = data.daily[forecastDay].weather[0].icon;
                 } else {
                     // Dit is de huidige weersinformatie
-                    weatherData = "Weer in " + city.name + " vandaag: " + data.weather[0].description + ", temperatuur: " + data.main.temp + "°C";
+                    weatherData = "Weer in " + city.name + " vandaag: " + data.weather[0].description + ", temperatuur: " + Math.round(data.main.temp) + "°C";
                     weatherIconCode = data.weather[0].icon;
                 }
 
