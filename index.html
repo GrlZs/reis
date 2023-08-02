@@ -154,7 +154,7 @@ h2 {
     <button id="togglePast">Verberg/Toon Verleden</button>
 </div>
 
-  <button class="collapsible" id="Strasbourg-button">6 - 8 aug: Almere naar Strasbourg (525 km, 6 uur)</button>
+  <button class="collapsible" id="Strasbourg-button">6 - 8 aug: Strasbourg (525 km, 6 uur)</button>
 <div class="content">
     <p>Verblijf in: <strong>Hôtel & Spa Château de l'ile</strong> (CI/CO 15h/12h)</p> 
 	<div id="Strasbourg-weather"></div>
@@ -168,7 +168,7 @@ h2 {
 </div>
 
 
-  <button class="collapsible" id="Lugano-button">8 - 10 aug: Strasbourg naar Lugano (400 km, 4-5 uur)</button>
+  <button class="collapsible" id="Lugano-button">8 - 10 aug: Lugano (400 km, 4-5 uur)</button>
   <div class="content">
     <p>Verblijf in: <strong>Lugano Superior Suites - Free Parking & Self Check-In</strong> (CI/CO 15h/10h)</p>
 	<div id="Lugano-weather"></div>
@@ -181,7 +181,7 @@ h2 {
     </ul>
   </div>
 
-  <button class="collapsible" id="Florence-button">10 - 13 aug: Lugano naar Florence (390 km, 5 uur)</button>
+  <button class="collapsible" id="Florence-button">10 - 13 aug: Florence (390 km, 5 uur)</button>
   <div class="content">
     <p>Verblijf in: <strong>Residenza d'Epoca Visacci</strong> (CI/CO 12-19h/11h)</p>
 	<div id="Florence-weather"></div>
@@ -195,7 +195,7 @@ h2 {
     </ul>
   </div>
 
-  <button class="collapsible" id="Montepulciano-button">13 - 16 aug: Florence naar Val d'Orcia (150 km, 2 uur)</button>
+  <button class="collapsible" id="Montepulciano-button">13 - 16 aug: Val d'Orcia (150 km, 2 uur)</button>
   <div class="content">
     <p>Verblijf in: <strong>Tenuta Macetona</strong> (CI/CO 16h-21h/10h)</p>
 	<div id="Montepulciano-weather"></div>
@@ -209,7 +209,7 @@ h2 {
     </ul>
   </div>
 
-  <button class="collapsible" id="Portofino-button">16 - 18 aug: Val d'Orcia naar IT Rivièra (360 km, 4 uur)</button>
+  <button class="collapsible" id="Portofino-button">16 - 18 aug: IT Rivièra (360 km, 4 uur)</button>
   <div class="content">
     <p>Verblijf in: <strong>Hotel Villa Alberti - Portofino Land</strong> (CI/CO 14.30h/11h)</p>
 	<div id="Portofino-weather"></div>
@@ -225,7 +225,7 @@ h2 {
     </ul>
   </div>
 
-<button class="collapsible" id="Geneve-button">18 - 20 aug: IT Rivièra naar Genève (420 km, 5 uur)</button>
+<button class="collapsible" id="Geneve-button">18 - 20 aug: Genève (420 km, 5 uur)</button>
 <div class="content">
     <p>Verblijf in: <strong>Novotel Genève Centre</strong> (CI/CO 15h/12h)</p>
 	<div id="Geneve-weather"></div>
@@ -239,7 +239,7 @@ h2 {
 </div>
 
 
-<button class="collapsible" id="Parijs-button">20 - 22 aug: Genève naar Parijs (570 km, 6 uur)</button>
+<button class="collapsible" id="Parijs-button">20 - 22 aug: Parijs (570 km, 6 uur)</button>
   <div class="content">
     <p>Verblijf in: <strong>1BR/4P Place des Vosges - Le Marais</strong> (CI/CO 16h/10h)</p>
 	<div id="Parijs-weather"></div>
@@ -255,7 +255,7 @@ h2 {
 
   </div>
 
-<button class="collapsible" id="Almere-button">22 aug: Parijs naar Almere (540 km, 6 uur)</button>
+<button class="collapsible" id="Almere-button">22 aug: Almere (540 km, 6 uur)</button>
   <div class="content">
 	<div id="Almere-weather"></div>
 				<img src="https://images.unsplash.com/photo-1534351590666-13e3e96b5017?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" class="locatie-foto" alt="Foto van Amsterdam">
@@ -429,7 +429,39 @@ document.getElementById("togglePast").addEventListener("click", function() {
   }
 });
 </script>
+<script>
+    // Overige code...
 
+    async function fetchWeather(city, date) {
+        // API request...
+    }
+
+    async function printWeatherForecast(city, startDate, endDate) {
+        let currentDate = new Date(startDate);
+        const maxForecastDate = addDays(new Date(), 6); // Get the maximum forecast date
+
+        while (currentDate <= endDate) {
+            let forecastDate = currentDate;
+
+            // If the current date is beyond the maximum forecast date, use the maximum forecast date
+            if (currentDate > maxForecastDate) {
+                forecastDate = maxForecastDate;
+            }
+
+            const weather = await fetchWeather(city, forecastDate);
+            addWeatherToSegment(city, weather, forecastDate);
+
+            currentDate.setDate(currentDate.getDate() + 1); // Go to next day
+        }
+    }
+
+    // Call the function for each city and corresponding start and end dates
+    printWeatherForecast("Strasbourg", "2023-08-06", "2023-08-08");
+    printWeatherForecast("Lugano", "2023-08-09", "2023-08-11");
+    // Add other cities...
+
+    // Overige code...
+</script>
 
 </body>
 </html>
