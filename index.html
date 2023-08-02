@@ -322,9 +322,13 @@ if (diff < 2) {
 
 // Voeg een event listener toe aan de 'load'-gebeurtenis van het venster
 window.addEventListener("load", function() {
-    // Het deel van de code waarin we automatisch de juiste sectie openen
-    coll[sectionToOpen].click();
+    // Voeg een kleine vertraging toe om ervoor te zorgen dat de weer-API volledig is geladen
+    setTimeout(function() {
+        // Het deel van de code waarin we automatisch de juiste sectie openen
+        coll[sectionToOpen].click();
+    }, 100);  // Vertraging van 1000 milliseconden (of 1 seconde)
 });
+
 
 
 </script>
